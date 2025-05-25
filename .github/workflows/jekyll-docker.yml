@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Loja Online PIX</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background: #2e1a47;
+    color: #ddd;
+    margin: 0; padding: 0;
+  }
+  header {
+    background: #5e3ea1;
+    padding: 20px;
+    text-align: center;
+    font-size: 2em;
+    font-weight: bold;
+    color: white;
+  }
+  #categories {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin: 20px 0;
+  }
+  #categories button {
+    background: #7e57c2;
+    border: none;
+    color: white;
+    padding: 10px 18px;
+    border-radius: 12px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background 0.3s;
+  }
+  #categories button:hover {
+    background: #a185d4;
+  }
+  #items {
+    max-width: 800px;
+    margin: 0 auto 40px auto;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+  }
+  .item-card {
+    background: #4b367c;
+    padding: 15px;
+    border-radius: 12px;
+    width: 180px;
+    box-shadow: 0 0 8px #7e57c2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .item-card h4 {
+    margin: 0 0 10px 0;
+  }
+  .item-card button {
+    margin-top: auto;
+    background: #9c69e2;
+    border: none;
+    color: white;
+    padding: 8px 12px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background 0.3s;
+  }
+  .item-card button:hover {
+    background: #c7afff;
+  }
+  #cart {
+    max-width: 800px;
+    margin: 0 auto 40px auto;
+    background: #3c2d6d;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 0 12px #7e57c2;
+  }
+  #cart h3 {
+    margin-top: 0;
+    color: #d1c4e9;
+  }
+  #cart-list {
+    list-style: none;
+    padding: 0;
+    margin: 10px 0 20px 0;
+  }
+  #cart-list li {
+    display: flex;
+    justify-content: space-between;
+    background: #5e4bb5;
+    padding: 10px 12px;
+    margin-bottom: 8px;
+    border-radius: 10px;
+    align-items: center;
+  }
+  #cart-list li button {
+    background: #b39ddb;
+    border: none;
+    color: white;
+    padding: 4px 10px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background 0.3s;
+  }
+  #cart-list li button:hover {
+    background: #d1c4e9;
+    color: #3c2d6d;
+  }
+  #total {
+    font-weight: bold;
+    font-size: 1.2em;
+    color: #e1bee7;
+  }
+  #btn-buy {
+    background: #7e57c2;
+    border: none;
+    color: white;
+    padding: 12px 25px;
+    font-size: 1.1em;
+    border-radius: 12px;
+    cursor: pointer;
+    font-weight: bold;
+    margin-top: 15px;
+    width: 100%;
+    transition: background 0.3s;
+  }
+  #btn-buy:hover {
+    background: #a185d4;
+  }
+
+  /* Modal PIX */
+  #pix-modal {
+    display: none;
+    position: fixed;
+    top:0; left:0; right:0; bottom:0;
+    background: rgba(0,0,0,0.85);
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+  }
+  #pix-modal .modal-content {
+    background: #5e3ea1;
+    padding: 25px 30px;
+    border-radius: 20px;
+    text-align: center;
+    box-shadow: 0 0 20px #9c69e2;
+    max-width: 350px;
+    width: 90%;
+    color: white;
+  }
+  #pix-modal img {
+    width: 200px;
+    margin-bottom: 15px;
+    border-radius: 15px;
+    box-shadow: 0 0 10px #7e57c2;
+  }
+  #pix-modal button {
+    background: #7e57c2;
+    border: none;
+    color: white;
+    padding: 8px 15px;
+    border-radius: 10px;
+    cursor: pointer;
+    margin: 10px 0 5px 0;
+    font-weight: bold;
+    transition: background 0.3s;
+  }
+  #pix-modal button:hover {
+    background: #a185d4;
+  }
+</style>
+</head>
+<body>
+
+<header>Loja Online PIX</header>
+
+<div id="categories">
+  <button data-category="carros">Carros</button>
+  <button data-category="armas">Armas</button>
+  <button data-category="outros">Outros</button>
+</div>
+
+<div id="items">
+  <!-- Itens aparecem aqui -->
+</div>
+
+<div id="cart">
+  <h3>Carrinho</h3>
+  <ul id="cart-list"></ul>
+  <div id="total">Total: R$ 0,00</div>
+  <button id="btn-buy" disabled>Comprar</button>
+</div>
+
+<!-- Modal PIX -->
+<div id="pix-modal">
+  <div class="modal-content">
+    <h3>Pagamento via PIX</h3>
+    <img id="pix-qr" src="" alt="QR Code PIX" />
+    <p>Chave PIX: <b id="pix-key-text">2bf9db4b-1388-4cb4-9bf1-db2d58326ac0</b></p>
+    <button id="btn-copy-pix">Copiar Chave PIX</button>
+    <p>Valor: R$ <span id="pix-valor">0,00</span></p>
+    <button id="btn-close-pix">Fechar</button>
+  </div>
+</div>
+
+<script>
+  // Dados dos produtos
+  const products = [
+    { id: 1, category: "carros", name: "Carro Esportivo", price: 150000 },
+    { id: 2, category: "carros", name: "SUV Luxo", price: 120000 },
+    { id: 3, category: "armas", name: "Pistola 9mm", price: 8000 },
+    { id: 4, category: "armas", name: "Rifle Automático", price: 25000 },
+    { id: 5, category: "outros", name: "Capacete", price: 1500 },
+    { id: 6, category: "outros", name: "Colete Balístico", price: 5000 },
+  ];
+
+  // Elementos
+  const categoriesButtons = document.querySelectorAll("#categories button");
+  const itemsDiv = document.getElementById("items");
+  const cartList = document.getElementById("cart-list");
+  const totalEl = document.getElementById("total");
+  const btnBuy = document.getElementById("btn-buy");
+
+  const pixModal = document.getElementById("pix-modal");
+  const pixQr = document.getElementById("pix-qr");
+  const pixValor = document.getElementById("pix-valor");
+  const btnClosePix = document.getElementById("btn-close-pix");
+  const btnCopyPix = document.getElementById("btn-copy-pix");
+  const pixKeyText = document.getElementById("pix-key-text");
+
+  // Estado
+  let selectedCategory = "carros";
+  let cart = [];
+
+  // Formata número para moeda brasileira
+  function formatBRL(num) {
+    return num.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }).replace("R$", "R$ ");
+  }
+
+  // Atualiza lista de itens conforme categoria selecionada
+  function updateItems() {
+    itemsDiv.innerHTML = "";
+    const filtered = products.filter(p => p.category === selectedCategory);
+    filtered.forEach(item => {
+      const card = document.createElement("div");
+      card.className = "item-card";
+      card.innerHTML = `
+        <h4>${item.name}</h4>
+        <p>Preço: ${formatBRL(item.price)}</p>
+        <button data-id="${item.id}">Adicionar ao Carrinho</button>
+      `;
+      itemsDiv.appendChild(card);
+    });
+  }
+
+  // Atualiza lista do carrinho e total
+  function updateCart() {
+    cartList.innerHTML = "";
+    if(cart.length === 0) {
+      cartList.innerHTML = "<li>Seu carrinho está vazio.</li>";
+      btnBuy.disabled = true;
+      totalEl.textContent = "Total: R$ 0,00";
+      return;
+    }
+    let total = 0;
+    cart.forEach((item, index) => {
+      total += item.price;
+      const li = document.createElement("li");
+      li.textContent = `${item.name} - ${formatBRL(item.price)}`;
+      const btnRemove = document.createElement("button");
+      btnRemove.textContent = "Remover";
+      btnRemove.onclick = () => {
+        cart.splice(index, 1);
+        updateCart();
+      };
+      li.appendChild(btnRemove);
+      cartList.appendChild(li);
+    });
+    totalEl.textContent = `Total: ${formatBRL(total)}`;
+    btnBuy.disabled = false;
+  }
+
+  // Eventos categoria
+  categoriesButtons.forEach(btn => {
+    btn.addEventListener("click", () => {
+      selectedCategory = btn.getAttribute("data-category");
+      updateItems();
+    });
+  });
+
+  // Evento adicionar item ao carrinho
+  items
+  
